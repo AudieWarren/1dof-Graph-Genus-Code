@@ -3,22 +3,38 @@ import math
 import copy
 from itertools import combinations
 import networkx as nx
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.animation import FuncAnimation
 
 #Notice - edge indexing starts from zero!
 #Just uncomment the value of n and the cycle list and run the programme. 
 #If no starting point is found, you can input a starting point manually at the bottom of the code. Uncomment the 'graph' function and comment out the 'list creation' function.
 
-#INPUT - n the number of edges minus one, and the list of edges
+#INPUT - the list of edges
 
-edges = [(0,1),(0,3),(1,2),(1,4),(2,5),(3,5),(3,4)]
+#k23 edges
+#edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4)]
+
+#C4 edges
+edges = [(0,1),(1,2),(2,3),(3,0)]
+
+#prism edges
+#edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5)]
+
+#cube graph
+#edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
+
+#edges = [(0,2),(0,3),(0,4),(0,5),(0,6),(0,7),(0,8),(0,9),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(0,10),(1,10)]
 n = len(edges)-1
 calligraph = nx.Graph(edges)
+vertices = len(list(calligraph.nodes))
 vertcyc = list(nx.simple_cycles(calligraph))
+size = 5000
+smallsize = 50
 #print(vertcyc)
 
-#H6 graph - similar to cube graph but inner square is half flipped, genus
-
-#3prism - genus 10
+#3prism minus internal triangle edge - genus 10 (two components of genus 5)
 # n = 7
 # cyc = [[0,1,2],[1,3,4,5],[2,4,5,6,7],[0,3,6,7], [0,2,3,4,5], [0,1,4,5,6,7],[1,2,3,6,7]]
 
@@ -38,7 +54,7 @@ vertcyc = list(nx.simple_cycles(calligraph))
 #     for j in range(i+1, m+1):
 #         cyc += [[2*i-2,2*i-1,2*j-2,2*j-1]]
 
-#calligraph example from Georg/Niels paper - hard to find starting point
+#calligraph example from Georg/Paul/Niels paper - hard to find starting point
 # n=9
 # cyc=[[0,1,2],[1,3,4,5],[5,6,7],[2,7,8,9],[0,3,4,6,8,9],[0,2,3,4,5],[1,3,4,6,7],[5,6,2,8,9]]
 
@@ -49,6 +65,10 @@ vertcyc = list(nx.simple_cycles(calligraph))
 #Wagner graph - genus 225
 # n=11
 # cyc = [[0,1,2,3,4,5,6,7],[0,8,4,11],[1,9,5,8],[2,10,6,9],[3,10,11,7],[0,1,2,3,11],[1,2,3,4,8],[2,3,4,5,9],[3,4,5,6,10],[4,5,6,7,11],[5,6,7,0,8],[6,7,0,1,9],[7,0,1,2,10],[0,1,9,4,5,11],[1,2,10,6,5,8],[2,3,11,7,6,9],[3,4,8,0,7,10],[0,1,2,10,6,5,4,11],[1,2,3,11,7,6,5,8],[2,3,4,8,0,7,6,9],[3,4,5,9,1,0,7,10],[0,1,9,6,10,3,11],[1,2,10,7,11,4,8],[2,3,11,0,8,5,9],[3,4,8,1,9,6,10],[4,5,9,2,10,7,11],[5,6,10,3,11,0,8],[6,7,11,4,8,1,9],[7,0,8,5,9,2,10]]
+
+if (2*vertices - 4 != n+1):
+  print("This does not look like a calligrah - does not satisfy edge count")
+  exit()
 
 #this function converts the cycles in terms of vertices to cycles in terms of edges
 def vertexedgeconvert(Vcyc):
@@ -75,7 +95,7 @@ numberoftriangles = len([triangle for triangle in cyc if len(triangle)==3])
 #Find positions for minima in starting point
 def listcreation(cyc,n):
   for j in range(n//2):
-    choices = [list(x) for i in range(1, n + 1) for x in combinations(range(n+1), i)]
+    choices = [list(x) for i in range(n//2 - j, n + 1) for x in combinations(range(n+1), i)]
     continue_x = False
     for x in choices:
       if continue_x == True:
@@ -97,7 +117,7 @@ def listcreation(cyc,n):
           if continue_y == True:
             continue
           if len(set(x).intersection(set(y)))< 2:
-            return graph(movetovertex(pointcreation(x,y,n)))    
+            return x,y,n   
   print("No starting point found")  
   return
 
@@ -122,14 +142,16 @@ def pointcreation(xchoice,ychoice,n):
     print(f"starting point is {[xcoords,ycoords]}")
     xrichcycles = [cycle for cycle in cyc if len(set(cycle).intersection(set(xchoice))) > 2]
     yrichcycles = [cycle for cycle in cyc if len(set(cycle).intersection(set(ychoice))) > 2]
-    print(f"Number of triple x cycles is {len(xrichcycles)}")
-    print(f"Number of triple y cycles is {len(yrichcycles)}")
+    #print(f"Number of triple x cycles is {len(xrichcycles)}")
+    #print(f"Number of triple y cycles is {len(yrichcycles)}")
     return [xcoords,ycoords]
 
-#Random number generator
-size = 1000
+#Random number generators
 def arb():
   return random.randint(1,size)
+
+def smallarb():
+  return random.randint(-smallsize,smallsize)
 
 def minpairs(P):
   # for each cycle such that the minimum is reached twice, the list of these pairs
@@ -306,13 +328,6 @@ def graph(pt):
         Ray.append([src,len(InfVert)])
   #Ray = [[T[0], T[1] + len(Vert)] for T in Ray]
   #Vert += InfVert
-  genus = len(Edg)-len(Vert)+1
-  print(f"There are {len(Vert)} vertices")
-  print(f"There are {len(Edg)} bounded edges")
-  print(f"There are {len(Ray)} rays")
-  #print(f"The vertices are {Vert}")
-  #print(f"The bounded edges are {Edg}")
-  print(f"The genus of (one component of) the curve is {genus}")
   return Vert,Edg,Ray
 
 
@@ -325,4 +340,77 @@ t2 = arb()
 #px = [0,arb(),0,arb(),0,arb()]
 #graph([px,py])
 
-listcreation(cyc,n)
+xchoices, ychoices, n = listcreation(cyc,n)
+Vert, Edg, Ray = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
+genus = len(Edg)-len(Vert)+1
+#print(f"There are {len(Vert)} vertices")
+#print(f"There are {len(Edg)} bounded edges")
+print(f"There are {len(Ray)} infinite rays")
+#print(f"The vertices are {Vert}")
+#print(f"The bounded edges are {Edg}")
+print(f"The genus of (one component of) the curve is {genus}")
+#Vert = [[1,2,3,4,5,8],[7,8,9,6,1,0],[0,6,4,3,3,1]
+#Edg = [[0,1],[1,2],[0,2]]
+
+#we define a random projection on k variables. The input set must be a list of lists, each list having k entries
+def randomprojection(set, k):
+  coeff1= []
+  coeff2 = []
+  for i in range(k):
+    coeff1.append(smallarb())
+    coeff2.append(smallarb())
+  images = []
+  for input in set:
+    output1 = np.dot(coeff1, input)
+    output2 = np.dot(coeff2, input)
+    output = [output1, output2]
+    images.append(output)
+  return images
+
+#We now throw away y coords for vertices
+XVert = []
+for vertex in Vert:
+  XVert.append(vertex[0])
+#print(f"XVert is {XVert}")
+
+#k is the number of variable
+k = len(XVert[0])
+
+#We now map down to two dimensions
+ProjVert = randomprojection(XVert, k)
+
+#We now plot the random projection of the tropical curve
+for vertex in ProjVert:
+    plt.plot(vertex[0],vertex[1],'ro')
+for edge in Edg:
+    xcoords = [ProjVert[edge[0]-1][0],ProjVert[edge[1]-1][0]]
+    ycoords = [ProjVert[edge[0]-1][1],ProjVert[edge[1]-1][1]]
+    #print(f"start = {start}")
+    #print(f"end = {end}")
+    plt.plot(xcoords,ycoords,'k-')
+plt.axis('equal')
+plt.show() 
+
+#HERE BEGINS THE ANIMATION STUFF
+
+G = nx.Graph()
+G.add_edges_from(Edg)
+
+vertices = {}
+for i in range(len(ProjVert)):
+  vertices.update({i+1 : (ProjVert[i][0],ProjVert[i][1])})
+
+
+def update(frame):
+    ax.clear()
+    #ax.axis('off')     
+    linesegments = list(G.edges())[:frame+1]
+    nodes = [node for edge in linesegments for node in edge]
+    nx.draw(G, pos=vertices, ax=ax, edgelist=linesegments, nodelist=nodes, edge_color='red',width = 2, node_size=10)
+    if frame > len(G.edges)-2:
+        ani.event_source.stop()
+fig, ax = plt.subplots()
+
+ani = FuncAnimation(fig, update, frames=len(G.edges), interval=200)
+
+plt.show()
