@@ -14,10 +14,10 @@ from matplotlib.animation import FuncAnimation
 #INPUT - the list of edges
 
 #k23 edges
-#edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4)]
+edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4)]
 
 #C4 edges
-edges = [(0,1),(1,2),(2,3),(3,0)]
+#edges = [(0,1),(1,2),(2,3),(3,0)]
 
 #prism edges
 #edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5)]
@@ -31,7 +31,7 @@ calligraph = nx.Graph(edges)
 vertices = len(list(calligraph.nodes))
 vertcyc = list(nx.simple_cycles(calligraph))
 size = 5000
-smallsize = 50
+smallsize = 10
 #print(vertcyc)
 
 #3prism minus internal triangle edge - genus 10 (two components of genus 5)
@@ -123,8 +123,17 @@ def listcreation(cyc,n):
 
 #Starting point may not be a vertex - we move to a vertex before starting the main algorithm
 def movetovertex(startingpoint):
- Direction, Distance = dirs(startingpoint)
- return go(startingpoint, Direction[0], Distance[0])
+  xcoords = startingpoint[0]
+  ycoords = startingpoint[1]
+  weights = []
+  for i in range(len(xcoords)):
+    weights.append(xcoords[i]+ycoords[i])
+  if len(weights) == len(set(weights)):
+    print("This starting point is generic")
+  else:
+    print("Warning! This starting point is not generic. Proceed at own risk.")
+  Direction, Distance = dirs(startingpoint)
+  return go(startingpoint, Direction[0], Distance[0])
  
 #From minima positions, we create the starting point
 def pointcreation(xchoice,ychoice,n):  
@@ -138,12 +147,7 @@ def pointcreation(xchoice,ychoice,n):
       xcoords[j] = 0
     for k in ychoice:
       ycoords[k] = 0
-    #for i in range(max(0,numberoftriangles-1)):
     print(f"starting point is {[xcoords,ycoords]}")
-    xrichcycles = [cycle for cycle in cyc if len(set(cycle).intersection(set(xchoice))) > 2]
-    yrichcycles = [cycle for cycle in cyc if len(set(cycle).intersection(set(ychoice))) > 2]
-    #print(f"Number of triple x cycles is {len(xrichcycles)}")
-    #print(f"Number of triple y cycles is {len(yrichcycles)}")
     return [xcoords,ycoords]
 
 #Random number generators
@@ -333,22 +337,33 @@ def graph(pt):
 
 t1 = arb()
 t2 = arb()
-#t3 = arb()
-#t4 = arb()
+t3 = arb()
+t4 = arb()
 #for inputting manual starting point
-#py = [0,0,arb(),0,arb(), 0]
-#px = [0,arb(),0,arb(),0,arb()]
-#graph([px,py])
+#k23 with cycle of form a,a,b,b - non-generic and non-transverse intersection
+# px = [0,t2,t2,t1,0,0]
+# py = [t3,t4,t4,0,0,0]
+
+#generic starting point for k23
+# px = [0,arb(),0,arb(),0,arb()]
+# py = [0,0,arb(),0,arb(),0]
+
+#Example non-generic starting point from k23 which draws out a face
+px = [0,0,0,arb(),0,arb()]
+py = [0,0,arb(),0,arb(),0]
+Vert, Edg, Ray = graph(movetovertex([px,py]))
 
 xchoices, ychoices, n = listcreation(cyc,n)
-Vert, Edg, Ray = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
+# Vert, Edg, Ray = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
+
 genus = len(Edg)-len(Vert)+1
-#print(f"There are {len(Vert)} vertices")
-#print(f"There are {len(Edg)} bounded edges")
+print(f"There are {len(Vert)} vertices")
+print(f"There are {len(Edg)} bounded edges")
 print(f"There are {len(Ray)} infinite rays")
-#print(f"The vertices are {Vert}")
-#print(f"The bounded edges are {Edg}")
+# print(f"The vertices are {Vert}")
+# print(f"The bounded edges are {Edg}")
 print(f"The genus of (one component of) the curve is {genus}")
+
 #Vert = [[1,2,3,4,5,8],[7,8,9,6,1,0],[0,6,4,3,3,1]
 #Edg = [[0,1],[1,2],[0,2]]
 
@@ -401,7 +416,7 @@ for i in range(len(ProjVert)):
   vertices.update({i+1 : (ProjVert[i][0],ProjVert[i][1])})
 
 
-def update(frame):
+def step(frame):
     ax.clear()
     #ax.axis('off')     
     linesegments = list(G.edges())[:frame+1]
@@ -409,8 +424,8 @@ def update(frame):
     nx.draw(G, pos=vertices, ax=ax, edgelist=linesegments, nodelist=nodes, edge_color='red',width = 2, node_size=10)
     if frame > len(G.edges)-2:
         ani.event_source.stop()
-fig, ax = plt.subplots()
+drawing, ax = plt.subplots()
 
-ani = FuncAnimation(fig, update, frames=len(G.edges), interval=200)
+ani = FuncAnimation(drawing, step, frames=len(G.edges), interval=200)
 
 plt.show()
