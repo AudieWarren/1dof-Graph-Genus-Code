@@ -1,15 +1,12 @@
 import random
 import math
 import copy
-import sys
-import ast
 from itertools import combinations
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
-import tkinter as tk
-import subprocess
+
 
 #Notice - edge indexing starts from zero!
 #Just uncomment the value of n and the cycle list and run the programme. 
@@ -21,7 +18,7 @@ import subprocess
 # edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4)]
 
 #C4 edges
-# edges = [(0,1),(  1,2),(2,3),(3,0)]
+edges = [(0,1),(  1,2),(2,3),(3,0)]
 
 #prism edges
 # edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5)]
@@ -38,17 +35,15 @@ import subprocess
 #Georg/Paul/Niels example
 # edges = [(0,1),(1,6),(6,4),(4,3),(3,5),(5,0),(0,2),(1,2),(2,3),(2,4)]
 
-edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,0),(0,6),(1,6),(3,6),(4,6)]
-print(f"edges before = {edges}")
-# edges = edges.split()
-# edges = [arg.strip() for arg in ' '.join(edgesinput).split()]
-# print(f"edges are {edges}")
+# edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,0),(0,6),(1,6),(3,6),(4,6)]
 n = len(edges)-1
 calligraph = nx.Graph(edges)
 vertices = len(list(calligraph.nodes))
 vertcyc = list(nx.simple_cycles(calligraph))
-size = 10000
-smallsize = 3
+graphvertices = list(calligraph)
+print(f"{graphvertices}")
+size = 500
+smallsize = 20
 #print(vertcyc)
 
 #3prism minus internal triangle edge - genus 10 (two components of genus 5)
@@ -109,35 +104,56 @@ def vertexedgeconvert(Vcyc):
 cyc = vertexedgeconvert(vertcyc)
 triangles = [triangle for triangle in cyc if len(triangle)==3]
 numberoftriangles = len([triangle for triangle in cyc if len(triangle)==3])
-#Find positions for minima in starting point
-def listcreation(cyc,n):
-  for j in range(n//2):
-    choices = [list(x) for i in range(n//2 - j, n + 1) for x in combinations(range(n+1), i)]
-    continue_x = False
-    for x in choices:
-      if continue_x == True:
-        continue_x = False
-        continue
-      for y in choices:
-          continue_y = False
-          if continue_x == True:
-            break
-          for cycle in cyc:
-            if len(set(x).intersection(set(cycle))) < 2:
-              continue_x = True
-              break
-            if len(set(y).intersection(set(cycle))) < 2:
-              continue_y = True
-              break
-          if continue_x == True:
-            continue
-          if continue_y == True:
-            continue
-          if len(set(x).intersection(set(y)))< 2:
-            return x,y,n   
-  print("No starting point found")  
-  return
 
+#Starting point generation starts here - commented out for new improved version
+#Find positions for minima in starting point
+# def listcreation(cyc,n):
+#   for j in range(n//2):
+#     choices = [list(x) for i in range(n//2 - j, n + 1) for x in combinations(range(n+1), i)]
+#     continue_x = False
+#     for x in choices:
+#       if continue_x == True:
+#         continue_x = False
+#         continue
+#       for y in choices:
+#           continue_y = False
+#           if continue_x == True:
+#             break
+#           for cycle in cyc:
+#             if len(set(x).intersection(set(cycle))) < 2:
+#               continue_x = True
+#               break
+#             if len(set(y).intersection(set(cycle))) < 2:
+#               continue_y = True
+#               break
+#           if continue_x == True:
+#             continue
+#           if continue_y == True:
+#             continue
+#           if len(set(x).intersection(set(y)))< 2:
+#             return x,y,n   
+#   print("No starting point found")  
+#   return
+
+# #From minima positions, we create the starting point
+# def pointcreation(xchoice,ychoice,n):  
+#     mins = [0]
+#     xcoords = []
+#     ycoords = []
+#     for i in range(n+1):
+#       xcoords += [arb()]
+#       ycoords += [arb()]
+#     for j in xchoice:
+#       xcoords[j] = 0
+#     for k in ychoice:
+#       ycoords[k] = 0
+#     print(f"starting point is {[xcoords,ycoords]}")
+#     return [xcoords,ycoords]
+
+#Want two random functions on the vertex set, one increasing, one decreasing. These are stored in two lists, Vinc and Vdec
+def startingpoint(edges, graphvertices):
+  Vinc = []
+  Vdec = []
 #Starting point may not be a vertex - we move to a vertex before starting the main algorithm
 def movetovertex(startingpoint):
   xcoords = startingpoint[0]
@@ -151,21 +167,6 @@ def movetovertex(startingpoint):
     print("Warning! This starting point is not generic. Proceed at own risk.")
   Direction, Distance = dirs(startingpoint)
   return go(startingpoint, Direction[0], Distance[0])
- 
-#From minima positions, we create the starting point
-def pointcreation(xchoice,ychoice,n):  
-    mins = [0]
-    xcoords = []
-    ycoords = []
-    for i in range(n+1):
-      xcoords += [arb()]
-      ycoords += [arb()]
-    for j in xchoice:
-      xcoords[j] = 0
-    for k in ychoice:
-      ycoords[k] = 0
-    print(f"starting point is {[xcoords,ycoords]}")
-    return [xcoords,ycoords]
 
 #Random number generators
 def arb():
@@ -366,7 +367,7 @@ def graph(pt):
   #Vert += InfVert
   return Vert,Edg,Ray,InfDires, InfDiresmultset
 
-
+#Some random point for use in starting points
 t1 = arb()
 t2 = arb()
 t3 = arb()
@@ -387,6 +388,7 @@ s7 = arb()
 s8 = arb()
 s0 = arb()
 s9 = arb()
+
 #for inputting manual starting point
 #k23 with cycle of form a,a,b,b - non-generic and non-transverse intersection
 # px = [0,t2,t2,t1,0,0]
@@ -404,12 +406,12 @@ s9 = arb()
 # px = [0 for i in range(n+1)]
 # py = [0 for i in range(n+1)]
 
-px = [t0,t1,min(t0,t1,t6,t9),min(t8,t9),0,0,t6,min(t0,t6),t9,t8]
-py = [0,min(s2,s3,s7,s8),s2,s3,s4,0,0,s7,min(s3,s8),s8]
-Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([px,py]))
+# px = [t0,t1,min(t0,t1,t6,t9),min(t8,t9),0,0,t6,min(t0,t6),t9,t8]
+# py = [0,min(s2,s3,s7,s8),s2,s3,s4,0,0,s7,min(s3,s8),s8]
+# Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([px,py]))
 
-# xchoices, ychoices, n = listcreation(cyc,n)
-# Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
+xchoices, ychoices, n = listcreation(cyc,n)
+Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
 
 genus = len(Edg)-len(Vert)+1
 print(f"There are {len(Vert)} vertices")
@@ -441,10 +443,7 @@ print(f"length of the mult list is {len(mults)}")
 print(f"the sum of mults is {sum}")
 print(f"The genus of (one component of) the curve is {genus}")
 
-#Vert = [[1,2,3,4,5,8],[7,8,9,6,1,0],[0,6,4,3,3,1]
-#Edg = [[0,1],[1,2],[0,2]]
-
-#we define a random projection on k variables. The input set must be a list of lists, each list having k entries
+#We define a random projection on k variables. The input set must be a list of lists, each list having k entries
 def randomprojection(set, k):
   coeff1= []
   coeff2 = []
@@ -459,19 +458,18 @@ def randomprojection(set, k):
     images.append(output)
   return images
 
-#We now throw away y coords for vertices
+#We throw away y coords for vertices
 XVert = []
 for vertex in Vert:
   XVert.append(vertex[0])
-#print(f"XVert is {XVert}")
 
-#k is the number of variable
+#k is the number of variables
 k = len(XVert[0])
 
-#We now map down to two dimensions
+#We map down to two dimensions
 ProjVert = randomprojection(XVert, k)
 # print(f"lenProjVert is {len(ProjVert)}")
-# We now plot the random projection of the tropical curve
+# We plot the random projection of the tropical curve
 for edge in Edg:
     xcoords = [ProjVert[edge[0]-1][0],ProjVert[edge[1]-1][0]]
     ycoords = [ProjVert[edge[0]-1][1],ProjVert[edge[1]-1][1]]
