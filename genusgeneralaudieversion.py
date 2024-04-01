@@ -1,11 +1,15 @@
 import random
 import math
 import copy
+import sys
+import ast
 from itertools import combinations
 import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.animation import FuncAnimation
+import tkinter as tk
+import subprocess
 
 #Notice - edge indexing starts from zero!
 #Just uncomment the value of n and the cycle list and run the programme. 
@@ -17,7 +21,7 @@ from matplotlib.animation import FuncAnimation
 # edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4)]
 
 #C4 edges
-# edges = [(0,1),(1,2),(2,3),(3,0)]
+# edges = [(0,1),(  1,2),(2,3),(3,0)]
 
 #prism edges
 # edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5)]
@@ -29,14 +33,21 @@ from matplotlib.animation import FuncAnimation
 # edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,6),(6,7),(7,0),(0,4),(1,5),(2,6),(3,7)]
 
 #cube graph
-edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
+# edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
 
-# edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4),(0,5),(1,5),(0,6),(1,6)]
+#Georg/Paul/Niels example
+# edges = [(0,1),(1,6),(6,4),(4,3),(3,5),(5,0),(0,2),(1,2),(2,3),(2,4)]
+
+edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,0),(0,6),(1,6),(3,6),(4,6)]
+print(f"edges before = {edges}")
+# edges = edges.split()
+# edges = [arg.strip() for arg in ' '.join(edgesinput).split()]
+# print(f"edges are {edges}")
 n = len(edges)-1
 calligraph = nx.Graph(edges)
 vertices = len(list(calligraph.nodes))
 vertcyc = list(nx.simple_cycles(calligraph))
-size = 2000
+size = 10000
 smallsize = 3
 #print(vertcyc)
 
@@ -349,8 +360,8 @@ def graph(pt):
       for ray in ry:
         InfVert += [ray]
         Ray.append([src,len(InfVert)])
-    if len(Vert) > 400:
-      return Vert,Edg,Ray,InfDires, InfDiresmultset
+    # if len(Vert) > 400:
+    #   return Vert,Edg,Ray,InfDires, InfDiresmultset
   #Ray = [[T[0], T[1] + len(Vert)] for T in Ray]
   #Vert += InfVert
   return Vert,Edg,Ray,InfDires, InfDiresmultset
@@ -360,6 +371,22 @@ t1 = arb()
 t2 = arb()
 t3 = arb()
 t4 = arb()
+t5 = arb()
+t6 = arb()
+t7 = arb()
+t8 = arb()
+t0 = arb()
+t9 = arb()
+s1 = arb()
+s2 = arb()
+s3 = arb()
+s4 = arb()
+s5 = arb()
+s6 = arb()
+s7 = arb()
+s8 = arb()
+s0 = arb()
+s9 = arb()
 #for inputting manual starting point
 #k23 with cycle of form a,a,b,b - non-generic and non-transverse intersection
 # px = [0,t2,t2,t1,0,0]
@@ -369,15 +396,19 @@ t4 = arb()
 # px = [0,arb(),0,arb(),0,arb()]
 # py = [0,0,arb(),0,arb(),0]
 
-#Example non-generic starting point from k23 which draws out a face
-px = [0,0,0,0,0,0,0,1,0,1,0,1]
-py = [0,0,0,0,0,0,1,0,1,0,1,0]
+# Example non-generic starting point from k23 which draws out a face
+# px = [0,0,0,0,0,1]
+# py = [0,0,0,0,1,0]
 
+#Zero starting point
 # px = [0 for i in range(n+1)]
 # py = [0 for i in range(n+1)]
+
+px = [t0,t1,min(t0,t1,t6,t9),min(t8,t9),0,0,t6,min(t0,t6),t9,t8]
+py = [0,min(s2,s3,s7,s8),s2,s3,s4,0,0,s7,min(s3,s8),s8]
 Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([px,py]))
 
-xchoices, ychoices, n = listcreation(cyc,n)
+# xchoices, ychoices, n = listcreation(cyc,n)
 # Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
 
 genus = len(Edg)-len(Vert)+1
@@ -442,9 +473,8 @@ ProjVert = randomprojection(XVert, k)
 # print(f"lenProjVert is {len(ProjVert)}")
 # We now plot the random projection of the tropical curve
 for edge in Edg:
-    if edge[1]-1 < len(ProjVert):
-      xcoords = [ProjVert[edge[0]-1][0],ProjVert[edge[1]-1][0]]
-      ycoords = [ProjVert[edge[0]-1][1],ProjVert[edge[1]-1][1]]
+    xcoords = [ProjVert[edge[0]-1][0],ProjVert[edge[1]-1][0]]
+    ycoords = [ProjVert[edge[0]-1][1],ProjVert[edge[1]-1][1]]
     #print(f"start = {start}")
     #print(f"end = {end}")
     plt.plot(xcoords,ycoords,'k-')
