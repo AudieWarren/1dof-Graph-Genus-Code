@@ -18,7 +18,7 @@ from matplotlib.animation import FuncAnimation
 # edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4)]
 
 #C4 edges
-edges = [(0,1),(  1,2),(2,3),(3,0)]
+# edges = [(0,1),(1,2),(2,3),(3,0)]
 
 #prism edges
 # edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5)]
@@ -26,57 +26,23 @@ edges = [(0,1),(  1,2),(2,3),(3,0)]
 #prism on 4 cycle edges
 # edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5), (3,5), (6,0),(6,7),(7,4)]
 
-#Wagner Graph
+#Wagner Graph - genus 225
 # edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,6),(6,7),(7,0),(0,4),(1,5),(2,6),(3,7)]
 
-#cube graph
-# edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
+#cube graph - genus 247
+edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
 
 #Georg/Paul/Niels example
 # edges = [(0,1),(1,6),(6,4),(4,3),(3,5),(5,0),(0,2),(1,2),(2,3),(2,4)]
 
-# edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,0),(0,6),(1,6),(3,6),(4,6)]
+# edges = [(0,2),(2,5),(5,1),(1,7),(7,3),(3,6),(6,4),(4,0),(0,7),(2,3),(5,6),(1,4)]
 n = len(edges)-1
 calligraph = nx.Graph(edges)
 vertices = len(list(calligraph.nodes))
 vertcyc = list(nx.simple_cycles(calligraph))
 graphvertices = list(calligraph)
-print(f"{graphvertices}")
 size = 500
 smallsize = 20
-#print(vertcyc)
-
-#3prism minus internal triangle edge - genus 10 (two components of genus 5)
-# n = 7
-# cyc = [[0,1,2],[1,3,4,5],[2,4,5,6,7],[0,3,6,7], [0,2,3,4,5], [0,1,4,5,6,7],[1,2,3,6,7]]
-
-# 4cycle - genus 1
-# n=3
-# cyc = [[0,1,2,3]]
-
-#cycle with triangles stuck on - genus 1
-# n=7
-# cyc=[[0,1,2,3],[0,4,5],[1,6,7],[2,3,4,5,6,7],[1,2,3,4,5],[0,3,2,7,6]]
-
-#K2,m - genus (m-2)2^(m-1)+1
-# m=3
-# n = 2*m - 1
-# cyc = []
-# for i in range(1, m):
-#     for j in range(i+1, m+1):
-#         cyc += [[2*i-2,2*i-1,2*j-2,2*j-1]]
-
-#calligraph example from Georg/Paul/Niels paper - hard to find starting point
-# n=9
-# cyc=[[0,1,2],[1,3,4,5],[5,6,7],[2,7,8,9],[0,3,4,6,8,9],[0,2,3,4,5],[1,3,4,6,7],[5,6,2,8,9]]
-
-#cube graph - genus 247
-# n = 11
-# cyc = [[0,1,2,3],[4,5,6,7],[0,9,4,8],[9,1,5,10],[2,6,10,11],[3,7,8,11],[3,11,6,5,4,8],[0,9,5,6,7,8],[1,9,4,7,6,10],[2,10,5,4,7,11],[2,10,6,7,8,3],[11,7,4,9,0,3],[8,4,5,10,1,0],[1,9,5,6,11,2],[3,11,6,10,1,9,4,8],[2,10,5,9,0,8,7,11],[3,11,6,5,9,0],[3,2,10,5,4,8],[2,1,9,4,7,11],[1,0,8,7,6,10],[1,2,3,8,7,6,5,9],[0,1,2,11,6,5,4,8],[0,1,10,5,4,7,11,3],[0,3,2,10,6,7,4,9],[2,10,5,9,0,3],[8,4,9,1,2,3],[11,7,8,0,1,2],[11,6,10,1,0,3]]
-
-#Wagner graph - genus 225
-# n=11
-# cyc = [[0,1,2,3,4,5,6,7],[0,8,4,11],[1,9,5,8],[2,10,6,9],[3,10,11,7],[0,1,2,3,11],[1,2,3,4,8],[2,3,4,5,9],[3,4,5,6,10],[4,5,6,7,11],[5,6,7,0,8],[6,7,0,1,9],[7,0,1,2,10],[0,1,9,4,5,11],[1,2,10,6,5,8],[2,3,11,7,6,9],[3,4,8,0,7,10],[0,1,2,10,6,5,4,11],[1,2,3,11,7,6,5,8],[2,3,4,8,0,7,6,9],[3,4,5,9,1,0,7,10],[0,1,9,6,10,3,11],[1,2,10,7,11,4,8],[2,3,11,0,8,5,9],[3,4,8,1,9,6,10],[4,5,9,2,10,7,11],[5,6,10,3,11,0,8],[6,7,11,4,8,1,9],[7,0,8,5,9,2,10]]
 
 if (2*vertices - 4 != n+1):
   print("This does not look like a calligrah - does not satisfy edge count")
@@ -95,15 +61,11 @@ def vertexedgeconvert(Vcyc):
         elif i == len(vcycle)-1:
           if {vcycle[i],vcycle[0]} == set(edges[j]):
             cycle.append(j)
-    #print(cycle)
     cyc.append(cycle)
-    #print(cyc)
   return cyc
 
 #Define the cycles of the graph
 cyc = vertexedgeconvert(vertcyc)
-triangles = [triangle for triangle in cyc if len(triangle)==3]
-numberoftriangles = len([triangle for triangle in cyc if len(triangle)==3])
 
 #Starting point generation starts here - commented out for new improved version
 #Find positions for minima in starting point
@@ -154,6 +116,48 @@ numberoftriangles = len([triangle for triangle in cyc if len(triangle)==3])
 def startingpoint(edges, graphvertices):
   Vinc = []
   Vdec = []
+  for i in range(len(graphvertices)):
+    if Vinc == []:
+      Vinc.append(arbsp())
+    else:
+      Vinc.append(Vinc[i-1] + arbsp())
+    if Vdec == []:
+      Vdec.append(arbsp())
+    else:
+      Vdec.append(Vdec[i-1] - arbsp())
+  #Vinc and Vdec are now defined
+  print(f"Vinc = {Vinc}")
+  print(f"Vdec = {Vdec}")
+  px = []
+  py = []
+  for i in range(len(edges)):
+    px.append(min(Vinc[edges[i][0]], Vinc[edges[i][1]]))
+    py.append(min(Vdec[edges[i][0]], Vdec[edges[i][1]]))
+  print(f"px before is {px}")
+  print(f"py before is {py}")
+  px0 = px[0]
+  pyend = py[len(py)-1]
+  for i in range(len(px)):
+    px[i] = px[i]-px0
+    py[i] = py[i]-pyend
+  for i in range(len(px)):
+    px[i] = px[i] + py[0]
+  print(f"Starting point is {px,py}")
+  # weights = []
+  # for i in range(len(px)):
+  #   weights.append(px[i]+py[i])
+  # weightsdiffs = []
+  # for i in range(len(weights)):
+  #   for j in range(i+1,len(weights)):
+  #     weightsdiffs.append(weights[i]-weights[j])
+  # print(f"Weights are {weights}")
+  # print(f"Weight differences are {weightsdiffs}")
+  # print(f"weight differences len is {len(weightsdiffs)}")
+  # print(f"weightdifferences set is {len(set(weightsdiffs))}")
+  # if len(weightsdiffs) != len(set(weightsdiffs)):
+  #   print(f"there are repeated weight differences")
+  return [px, py]
+
 #Starting point may not be a vertex - we move to a vertex before starting the main algorithm
 def movetovertex(startingpoint):
   xcoords = startingpoint[0]
@@ -162,9 +166,9 @@ def movetovertex(startingpoint):
   for i in range(len(xcoords)):
     weights.append(xcoords[i]+ycoords[i])
   if len(weights) == len(set(weights)):
-    print("This starting point is generic")
+    print("This starting point has distinct weights")
   else:
-    print("Warning! This starting point is not generic. Proceed at own risk.")
+    print("Warning! This starting point does not have distinct weights. Proceed at own risk.")
   Direction, Distance = dirs(startingpoint)
   return go(startingpoint, Direction[0], Distance[0])
 
@@ -174,6 +178,9 @@ def arb():
 
 def smallarb():
   return random.randint(-smallsize,smallsize)
+
+def arbsp():
+  return random.randint(1,500)
 
 def minpairs(P):
   # for each cycle such that the minimum is reached twice, the list of these pairs
@@ -341,7 +348,7 @@ def graph(pt):
   while len(PVert) > 0:
     pick = PVert[0]
     PVert = PVert[1:]
-    #print(f"Found vertex {pick}")
+    # print(f"Found vertex {pick}")
     Vert = Vert + [pick]
     src = len(Vert)
     nxt = neighbors(pick)
@@ -361,42 +368,9 @@ def graph(pt):
       for ray in ry:
         InfVert += [ray]
         Ray.append([src,len(InfVert)])
-    # if len(Vert) > 400:
-    #   return Vert,Edg,Ray,InfDires, InfDiresmultset
   #Ray = [[T[0], T[1] + len(Vert)] for T in Ray]
   #Vert += InfVert
   return Vert,Edg,Ray,InfDires, InfDiresmultset
-
-#Some random point for use in starting points
-t1 = arb()
-t2 = arb()
-t3 = arb()
-t4 = arb()
-t5 = arb()
-t6 = arb()
-t7 = arb()
-t8 = arb()
-t0 = arb()
-t9 = arb()
-s1 = arb()
-s2 = arb()
-s3 = arb()
-s4 = arb()
-s5 = arb()
-s6 = arb()
-s7 = arb()
-s8 = arb()
-s0 = arb()
-s9 = arb()
-
-#for inputting manual starting point
-#k23 with cycle of form a,a,b,b - non-generic and non-transverse intersection
-# px = [0,t2,t2,t1,0,0]
-# py = [t3,t4,t4,0,0,0]
-
-#generic starting point for k23
-# px = [0,arb(),0,arb(),0,arb()]
-# py = [0,0,arb(),0,arb(),0]
 
 # Example non-generic starting point from k23 which draws out a face
 # px = [0,0,0,0,0,1]
@@ -405,13 +379,10 @@ s9 = arb()
 #Zero starting point
 # px = [0 for i in range(n+1)]
 # py = [0 for i in range(n+1)]
-
-# px = [t0,t1,min(t0,t1,t6,t9),min(t8,t9),0,0,t6,min(t0,t6),t9,t8]
-# py = [0,min(s2,s3,s7,s8),s2,s3,s4,0,0,s7,min(s3,s8),s8]
 # Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([px,py]))
 
-xchoices, ychoices, n = listcreation(cyc,n)
-Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
+# xchoices, ychoices, n = listcreation(cyc,n)
+Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(startingpoint(edges, graphvertices))) 
 
 genus = len(Edg)-len(Vert)+1
 print(f"There are {len(Vert)} vertices")
@@ -421,12 +392,12 @@ print(f"There are {len(InfDires)} infinite ray directions")
 # print(f"The infinite ray directions are {InfDires}")
 # print(f"The vertices are {Vert}")
 # print(f"The bounded edges are {Edg}")
+
+#We may want the multiplicities of infinite ray directions
 mults = []
 for dir in InfDires:
   count = 0
   for test in InfDiresmultset:
-    # print(f"dir is {dir}")
-    # print(f"test is {test}")
     if dir == test:
       count = count + 1
   mults.append(count)
@@ -437,10 +408,10 @@ for i in mults:
 dirswithmult = []
 for i in range(len(InfDires)):
   dirswithmult.append([list(InfDires)[i],mults[i] ])
-print(f"The mults alone are {mults}")
+# print(f"The mults alone are {mults}")
 # print(f"The multiplicity list is {dirswithmult}")
-print(f"length of the mult list is {len(mults)}")
-print(f"the sum of mults is {sum}")
+# print(f"length of the mult list is {len(mults)}")
+# print(f"the sum of mults is {sum}")
 print(f"The genus of (one component of) the curve is {genus}")
 
 #We define a random projection on k variables. The input set must be a list of lists, each list having k entries
@@ -477,7 +448,7 @@ for edge in Edg:
     #print(f"end = {end}")
     plt.plot(xcoords,ycoords,'k-')
 for vertex in ProjVert:
-    plt.plot(vertex[0],vertex[1],'ro')
+    plt.plot(vertex[0],vertex[1],'ro',markersize=1)
 plt.axis('equal')
 plt.show() 
 
