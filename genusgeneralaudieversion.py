@@ -14,13 +14,22 @@ from matplotlib.animation import FuncAnimation
 
 #INPUT - the list of edges
 
-#k23 edges
+# K24-genus 17
+# 3prism without int triangle edge - genus 5
+
+#k23 edges - genus 5
 # edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4)]
 
-#C4 edges
+#k24 - genus 17
+# edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4),(0,5),(1,5)]
+
+#k33 minus an edge - genus 17
+# edges = [(0,3),(0,4),(0,5),(1,3),(1,4),(1,5),(2,3),(2,4)]
+
+#C4 edges - genus 1
 # edges = [(0,1),(1,2),(2,3),(3,0)]
 
-#prism edges
+#prism edges -genus 5
 # edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5)]
 
 #prism on 4 cycle edges
@@ -30,23 +39,40 @@ from matplotlib.animation import FuncAnimation
 # edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,6),(6,7),(7,0),(0,4),(1,5),(2,6),(3,7)]
 
 #cube graph - genus 247
-edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
+# edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
 
 #Georg/Paul/Niels example
-# edges = [(0,1),(1,6),(6,4),(4,3),(3,5),(5,0),(0,2),(1,2),(2,3),(2,4)]
+edges = [(0,1),(1,6),(6,4),(4,3),(3,5),(5,0),(0,2),(1,2),(2,3),(2,4)]
 
-# edges = [(0,2),(2,5),(5,1),(1,7),(7,3),(3,6),(6,4),(4,0),(0,7),(2,3),(5,6),(1,4)]
+#Example of Sitharam,Wang,Gao - genus 129
+# edges = [(0,2),(2,1),(1,3),(0,3),(4,5),(5,6),(6,7),(7,4),(2,4),(1,5),(3,6),(3,4)]
+
+# edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4),(0,5),(1,5)]
+# edges = [(0,3),(0,4),(0,5),(0,6),(1,3),(1,4),(1,6),(2,5),(2,6),(1,2)]
 n = len(edges)-1
 calligraph = nx.Graph(edges)
 vertices = len(list(calligraph.nodes))
 vertcyc = list(nx.simple_cycles(calligraph))
 graphvertices = list(calligraph)
-size = 500
+size = 1000
 smallsize = 20
 
 if (2*vertices - 4 != n+1):
   print("This does not look like a calligrah - does not satisfy edge count")
   exit()
+  
+  #Random number generators
+def arb():
+  return random.randint(1,size)
+
+def smallarb():
+  return random.randint(-smallsize,smallsize)
+
+def arbsp():
+  return random.randint(1,500)
+
+Tridict = nx.triangles(calligraph, None)    
+Tri = sum(Tridict.values())
 
 #this function converts the cycles in terms of vertices to cycles in terms of edges
 def vertexedgeconvert(Vcyc):
@@ -69,48 +95,48 @@ cyc = vertexedgeconvert(vertcyc)
 
 #Starting point generation starts here - commented out for new improved version
 #Find positions for minima in starting point
-# def listcreation(cyc,n):
-#   for j in range(n//2):
-#     choices = [list(x) for i in range(n//2 - j, n + 1) for x in combinations(range(n+1), i)]
-#     continue_x = False
-#     for x in choices:
-#       if continue_x == True:
-#         continue_x = False
-#         continue
-#       for y in choices:
-#           continue_y = False
-#           if continue_x == True:
-#             break
-#           for cycle in cyc:
-#             if len(set(x).intersection(set(cycle))) < 2:
-#               continue_x = True
-#               break
-#             if len(set(y).intersection(set(cycle))) < 2:
-#               continue_y = True
-#               break
-#           if continue_x == True:
-#             continue
-#           if continue_y == True:
-#             continue
-#           if len(set(x).intersection(set(y)))< 2:
-#             return x,y,n   
-#   print("No starting point found")  
-#   return
+def listcreation(cyc,n):
+  for j in range(n//2):
+    choices = [list(x) for i in range(n//2 - j, n + 1) for x in combinations(range(n+1), i)]
+    continue_x = False
+    for x in choices:
+      if continue_x == True:
+        continue_x = False
+        continue
+      for y in choices:
+          continue_y = False
+          if continue_x == True:
+            break
+          for cycle in cyc:
+            if len(set(x).intersection(set(cycle))) < 2:
+              continue_x = True
+              break
+            if len(set(y).intersection(set(cycle))) < 2:
+              continue_y = True
+              break
+          if continue_x == True:
+            continue
+          if continue_y == True:
+            continue
+          if len(set(x).intersection(set(y)))< 2:
+            return x,y,n   
+  print("No starting point found")  
+  return
 
 # #From minima positions, we create the starting point
-# def pointcreation(xchoice,ychoice,n):  
-#     mins = [0]
-#     xcoords = []
-#     ycoords = []
-#     for i in range(n+1):
-#       xcoords += [arb()]
-#       ycoords += [arb()]
-#     for j in xchoice:
-#       xcoords[j] = 0
-#     for k in ychoice:
-#       ycoords[k] = 0
-#     print(f"starting point is {[xcoords,ycoords]}")
-#     return [xcoords,ycoords]
+def pointcreation(xchoice,ychoice,n):  
+    mins = [0]
+    xcoords = []
+    ycoords = []
+    for i in range(n+1):
+      xcoords += [arb()]
+      ycoords += [arb()]
+    for j in xchoice:
+      xcoords[j] = 0
+    for k in ychoice:
+      ycoords[k] = 0
+    print(f"starting point is {[xcoords,ycoords]}")
+    return [xcoords,ycoords]
 
 #Want two random functions on the vertex set, one increasing, one decreasing. These are stored in two lists, Vinc and Vdec
 def startingpoint(edges, graphvertices):
@@ -133,8 +159,8 @@ def startingpoint(edges, graphvertices):
   for i in range(len(edges)):
     px.append(min(Vinc[edges[i][0]], Vinc[edges[i][1]]))
     py.append(min(Vdec[edges[i][0]], Vdec[edges[i][1]]))
-  print(f"px before is {px}")
-  print(f"py before is {py}")
+  # print(f"px before is {px}")
+  # print(f"py before is {py}")
   px0 = px[0]
   pyend = py[len(py)-1]
   for i in range(len(px)):
@@ -143,19 +169,19 @@ def startingpoint(edges, graphvertices):
   for i in range(len(px)):
     px[i] = px[i] + py[0]
   print(f"Starting point is {px,py}")
-  # weights = []
-  # for i in range(len(px)):
-  #   weights.append(px[i]+py[i])
-  # weightsdiffs = []
-  # for i in range(len(weights)):
-  #   for j in range(i+1,len(weights)):
-  #     weightsdiffs.append(weights[i]-weights[j])
+  weights = []
+  for i in range(len(px)):
+    weights.append(px[i]+py[i])
+  weightsdiffs = []
+  for i in range(len(weights)):
+    for j in range(i+1,len(weights)):
+      weightsdiffs.append(weights[i]-weights[j])
   # print(f"Weights are {weights}")
   # print(f"Weight differences are {weightsdiffs}")
   # print(f"weight differences len is {len(weightsdiffs)}")
   # print(f"weightdifferences set is {len(set(weightsdiffs))}")
-  # if len(weightsdiffs) != len(set(weightsdiffs)):
-  #   print(f"there are repeated weight differences")
+  if len(weightsdiffs) != len(set(weightsdiffs)):
+    print(f"there are repeated weight differences")
   return [px, py]
 
 #Starting point may not be a vertex - we move to a vertex before starting the main algorithm
@@ -171,16 +197,6 @@ def movetovertex(startingpoint):
     print("Warning! This starting point does not have distinct weights. Proceed at own risk.")
   Direction, Distance = dirs(startingpoint)
   return go(startingpoint, Direction[0], Distance[0])
-
-#Random number generators
-def arb():
-  return random.randint(1,size)
-
-def smallarb():
-  return random.randint(-smallsize,smallsize)
-
-def arbsp():
-  return random.randint(1,500)
 
 def minpairs(P):
   # for each cycle such that the minimum is reached twice, the list of these pairs
@@ -380,10 +396,13 @@ def graph(pt):
 # px = [0 for i in range(n+1)]
 # py = [0 for i in range(n+1)]
 # Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([px,py]))
-
-# xchoices, ychoices, n = listcreation(cyc,n)
-Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(startingpoint(edges, graphvertices))) 
-
+print(f"This graph has {Tri // 3} triangles")
+if Tri < 4:
+    xchoices, ychoices, n = listcreation(cyc,n)
+    Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
+else: 
+    Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(startingpoint(edges, graphvertices)))
+    
 genus = len(Edg)-len(Vert)+1
 print(f"There are {len(Vert)} vertices")
 print(f"There are {len(Edg)} bounded edges")
