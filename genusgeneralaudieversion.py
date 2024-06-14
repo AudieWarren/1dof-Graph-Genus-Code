@@ -42,7 +42,10 @@ from matplotlib.animation import FuncAnimation
 # edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
 
 #Georg/Paul/Niels example
-edges = [(0,1),(1,6),(6,4),(4,3),(3,5),(5,0),(0,2),(1,2),(2,3),(2,4)]
+# edges = [(0,1),(1,6),(6,4),(4,3),(3,5),(5,0),(0,2),(1,2),(2,3),(2,4)]
+
+#Josef example on nine vertices
+edges = [(0,1),(0,2),(0,3),(0,4),(5,1),(5,4),(6,1),(6,2),(7,2),(7,3),(8,3),(8,4),(5,8),(6,7)]
 
 #Example of Sitharam,Wang,Gao - genus 129
 # edges = [(0,2),(2,1),(1,3),(0,3),(4,5),(5,6),(6,7),(7,4),(2,4),(1,5),(3,6),(3,4)]
@@ -55,7 +58,7 @@ vertices = len(list(calligraph.nodes))
 vertcyc = list(nx.simple_cycles(calligraph))
 graphvertices = list(calligraph)
 size = 1000
-smallsize = 20
+smallsize = 100
 
 if (2*vertices - 4 != n+1):
   print("This does not look like a calligrah - does not satisfy edge count")
@@ -395,8 +398,8 @@ def graph(pt):
 #Zero starting point
 # px = [0 for i in range(n+1)]
 # py = [0 for i in range(n+1)]
-# Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([px,py]))
-print(f"This graph has {Tri // 3} triangles")
+# Vert, Edg, Ray, InfDires, InfDiresmultset = graph([px,py])
+# print(f"This graph has {Tri // 3} triangles")
 if Tri < 4:
     xchoices, ychoices, n = listcreation(cyc,n)
     Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 

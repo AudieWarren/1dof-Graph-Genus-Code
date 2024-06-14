@@ -14,24 +14,30 @@ from matplotlib.animation import FuncAnimation
 #INPUT - the list of edges
 
 #k23 edges
-edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4)]
+# edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4)]
 
 #C4 edges
-#edges = [(0,1),(1,2),(2,3),(3,0)]
+# edges = [(0,1),(1,2),(2,3),(3,0)]
 
 #prism edges
-#edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5)]
+# edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5)]
+
+#prism on 4 cycle edges
+# edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5), (3,5), (6,0),(6,7),(7,4)]
+
+#Wagner Graph
+# edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,6),(6,7),(7,0),(0,4),(1,5),(2,6),(3,7)]
 
 #cube graph
-#edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
+edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
 
-#edges = [(0,2),(0,3),(0,4),(0,5),(0,6),(0,7),(0,8),(0,9),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(1,8),(1,9),(0,10),(1,10)]
+# edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4),(0,5),(1,5),(0,6),(1,6)]
 n = len(edges)-1
 calligraph = nx.Graph(edges)
 vertices = len(list(calligraph.nodes))
 vertcyc = list(nx.simple_cycles(calligraph))
-size = 5000
-smallsize = 10
+size = 2000
+smallsize = 3
 #print(vertcyc)
 
 #3prism minus internal triangle edge - genus 10 (two components of genus 5)
@@ -296,14 +302,20 @@ def neighbors(pt):
 
 def rays(pt):
   # infinite rays from vertex
-  edges,dists = dirs(pt)
+  directions,dists = dirs(pt)
+  # print(f"directions = {directions}")
   nbs = []
-  for i in range(1,len(edges)+1):
-    if not math.isfinite(dists[i-1]):
-      dir = edges[i-1]
+  infdires = set()
+  for i in range(len(directions)):
+    if not math.isfinite(dists[i]):
+      dir = directions[i]
+      # print(f"dir = {dir}")
+      infdires.add(tuple(sorted(dir)))
+      # print(f"infdires is {infdires}")
+      # print(f"Infinite ray direction is {dir}")
       pt_copy = copy.deepcopy(pt)
       nbs.append(go(pt_copy, dir, size // 4))
-  return nbs
+  return nbs, infdires
 
 def graph(pt):
   # complete connected graph
@@ -312,6 +324,8 @@ def graph(pt):
   Ray = []
   PVert = [pt]
   InfVert = []
+  InfDiresmultset = []
+  InfDires = set()
   while len(PVert) > 0:
     pick = PVert[0]
     PVert = PVert[1:]
@@ -325,14 +339,21 @@ def graph(pt):
     for i in range(1,len(PVert)+1):
       if PVert[i-1] in nxt:
         Edg.append([src,len(Vert)+i])
-    ry = rays(pick)
+    ry, infdir = rays(pick)
+    # print(f"inf dir is {infdir}")
     if len(ry) > 0:
+      # print(f"infdir = {infdir}")
+      InfDires.update(infdir)
+      for i in range(len(ry)):
+        InfDiresmultset.append(list(infdir)[i])
       for ray in ry:
         InfVert += [ray]
         Ray.append([src,len(InfVert)])
+    if len(Vert) > 400:
+      return Vert,Edg,Ray,InfDires, InfDiresmultset
   #Ray = [[T[0], T[1] + len(Vert)] for T in Ray]
   #Vert += InfVert
-  return Vert,Edg,Ray
+  return Vert,Edg,Ray,InfDires, InfDiresmultset
 
 
 t1 = arb()
@@ -349,19 +370,44 @@ t4 = arb()
 # py = [0,0,arb(),0,arb(),0]
 
 #Example non-generic starting point from k23 which draws out a face
-px = [0,0,0,arb(),0,arb()]
-py = [0,0,arb(),0,arb(),0]
-Vert, Edg, Ray = graph(movetovertex([px,py]))
+px = [0,0,0,0,0,0,0,1,0,1,0,1]
+py = [0,0,0,0,0,0,1,0,1,0,1,0]
+
+# px = [0 for i in range(n+1)]
+# py = [0 for i in range(n+1)]
+Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([px,py]))
 
 xchoices, ychoices, n = listcreation(cyc,n)
-# Vert, Edg, Ray = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
+# Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
 
 genus = len(Edg)-len(Vert)+1
 print(f"There are {len(Vert)} vertices")
 print(f"There are {len(Edg)} bounded edges")
 print(f"There are {len(Ray)} infinite rays")
+print(f"There are {len(InfDires)} infinite ray directions")
+# print(f"The infinite ray directions are {InfDires}")
 # print(f"The vertices are {Vert}")
 # print(f"The bounded edges are {Edg}")
+mults = []
+for dir in InfDires:
+  count = 0
+  for test in InfDiresmultset:
+    # print(f"dir is {dir}")
+    # print(f"test is {test}")
+    if dir == test:
+      count = count + 1
+  mults.append(count)
+sum = 0
+for i in mults:
+  sum = sum + i
+  
+dirswithmult = []
+for i in range(len(InfDires)):
+  dirswithmult.append([list(InfDires)[i],mults[i] ])
+print(f"The mults alone are {mults}")
+# print(f"The multiplicity list is {dirswithmult}")
+print(f"length of the mult list is {len(mults)}")
+print(f"the sum of mults is {sum}")
 print(f"The genus of (one component of) the curve is {genus}")
 
 #Vert = [[1,2,3,4,5,8],[7,8,9,6,1,0],[0,6,4,3,3,1]
@@ -393,20 +439,21 @@ k = len(XVert[0])
 
 #We now map down to two dimensions
 ProjVert = randomprojection(XVert, k)
-
-#We now plot the random projection of the tropical curve
-for vertex in ProjVert:
-    plt.plot(vertex[0],vertex[1],'ro')
+# print(f"lenProjVert is {len(ProjVert)}")
+# We now plot the random projection of the tropical curve
 for edge in Edg:
-    xcoords = [ProjVert[edge[0]-1][0],ProjVert[edge[1]-1][0]]
-    ycoords = [ProjVert[edge[0]-1][1],ProjVert[edge[1]-1][1]]
+    if edge[1]-1 < len(ProjVert):
+      xcoords = [ProjVert[edge[0]-1][0],ProjVert[edge[1]-1][0]]
+      ycoords = [ProjVert[edge[0]-1][1],ProjVert[edge[1]-1][1]]
     #print(f"start = {start}")
     #print(f"end = {end}")
     plt.plot(xcoords,ycoords,'k-')
+for vertex in ProjVert:
+    plt.plot(vertex[0],vertex[1],'ro')
 plt.axis('equal')
 plt.show() 
 
-#HERE BEGINS THE ANIMATION STUFF
+# HERE BEGINS THE ANIMATION STUFF
 
 G = nx.Graph()
 G.add_edges_from(Edg)
@@ -417,8 +464,7 @@ for i in range(len(ProjVert)):
 
 
 def step(frame):
-    ax.clear()
-    #ax.axis('off')     
+    ax.clear() 
     linesegments = list(G.edges())[:frame+1]
     nodes = [node for edge in linesegments for node in edge]
     nx.draw(G, pos=vertices, ax=ax, edgelist=linesegments, nodelist=nodes, edge_color='red',width = 2, node_size=10)

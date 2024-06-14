@@ -68,8 +68,10 @@ def vertexedgeconvert(Vcyc):
     #print(cyc)
   return cyc
 
+#Define the cycles of the graph
 cyc = vertexedgeconvert(vertcyc)
 
+#Find positions for minima in starting point
 def listcreation(cyc,n):
   for j in range(n // 2):
     numberoftriangles = len([triangle for triangle in cyc if len(triangle)==3])
@@ -99,11 +101,12 @@ def listcreation(cyc,n):
   print("No starting point found")  
   return
 
+#Starting point may not be a vertex - we move to a vertex before starting the main algorithm
 def movetovertex(startingpoint):
  Direction, Distance = dirs(startingpoint)
  return go(startingpoint, Direction[0], Distance[0])
  
-  
+#From minima positions, we create the starting point
 def pointcreation(xchoice,ychoice,n):
     xcoords = []
     ycoords = []
@@ -117,6 +120,7 @@ def pointcreation(xchoice,ychoice,n):
     print(f"starting point is {[xcoords,ycoords]}")
     return [xcoords,ycoords]
 
+#Random number generator
 size = 1000
 def arb():
   return random.randint(1,size)
