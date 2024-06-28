@@ -1,6 +1,5 @@
 import math
 import copy
-import main
 import randomnumbergenerators
 import graphgeneration
 cyc = graphgeneration.cyc

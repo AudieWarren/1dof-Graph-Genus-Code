@@ -14,7 +14,7 @@ from matplotlib.animation import FuncAnimation
 #INPUT - the list of edges
 
 #k23 edges
-# edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4)]
+edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4)]
 
 #C4 edges
 # edges = [(0,1),(1,2),(2,3),(3,0)]
@@ -31,7 +31,7 @@ from matplotlib.animation import FuncAnimation
 #cube graph
 # edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
 
-edges = [(0,1),(1,2),(2,3),(3,0),(4,5),(5,6),(6,7),(7,4),(8,9),(9,10),(10,11),(11,8),(8,4),(4,0),(1,5),(5,9),(2,6),(6,10),(3,7),(7,11)]
+# edges = [(0,1),(1,2),(2,3),(3,0),(4,5),(5,6),(6,7),(7,4),(8,9),(9,10),(10,11),(11,8),(8,4),(4,0),(1,5),(5,9),(2,6),(6,10),(3,7),(7,11)]
 
 # edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4),(0,5),(1,5),(0,6),(1,6)]
 n = len(edges)-1
@@ -372,15 +372,15 @@ t4 = arb()
 # py = [0,0,arb(),0,arb(),0]
 
 #Example non-generic starting point from k23 which draws out a face
-px = [0,0,0,0,0,0,0,1,0,1,0,1]
-py = [0,0,0,0,0,0,1,0,1,0,1,0]
+# px = [0,0,0,0,0,0,0,1,0,1,0,1]
+# py = [0,0,0,0,0,0,1,0,1,0,1,0]
 
 # px = [0 for i in range(n+1)]
 # py = [0 for i in range(n+1)]
-Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([px,py]))
+# Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([px,py]))
 
 xchoices, ychoices, n = listcreation(cyc,n)
-# Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
+Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
 
 genus = len(Edg)-len(Vert)+1
 print(f"There are {len(Vert)} vertices")

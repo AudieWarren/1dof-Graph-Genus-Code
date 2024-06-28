@@ -1,4 +1,3 @@
-import math 
 from itertools import combinations
 from randomnumbergenerators import *
 from algorithm import dirs, go

@@ -1,6 +1,6 @@
 import random
 
-size = 1000
+size = 5000
 smallsize = 100
 
 def arb():
