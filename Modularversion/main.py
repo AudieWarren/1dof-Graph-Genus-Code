@@ -3,14 +3,13 @@ Tri = graphgeneration.Tri
 from StartingPoint import *
 from algorithm import *
 from graphgeneration import *
-import math
 
-
-# if Tri < 4:
-    # xchoices, ychoices, n = listcreation(cyc,n)
-    # Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
-# else: 
-Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(startingpoint(edges, graphvertices)))
+print(f"cycles are {cyc}")
+if Tri < 4:
+    xchoices, ychoices, n = listcreation(cyc,n)
+    Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
+else: 
+    Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(startingpoint(edges, graphvertices)))
     
 genus = len(Edg)-len(Vert)+1
 
