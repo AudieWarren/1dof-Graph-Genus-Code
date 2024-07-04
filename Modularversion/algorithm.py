@@ -2,9 +2,11 @@ import math
 import copy
 import randomnumbergenerators
 import graphgeneration
+from transversalitytest import transversalitytest
 cyc = graphgeneration.cyc
 n = graphgeneration.n
 size = randomnumbergenerators.size
+
 
 def minpairs(P):
   # for each cycle such that the minimum is reached twice, the list of these pairs
@@ -162,6 +164,12 @@ def rays(pt):
 
 def graph(pt):
   # complete connected graph
+  weights = []
+  for i in range(len(pt[0])):
+    weights.append(pt[0][i]+pt[1][i])
+  if transversalitytest(pt, weights, cyc) == False:
+    print("Non-transverse intersection found")
+    exit()
   Vert = []
   Edg = []
   Ray = []
@@ -171,6 +179,9 @@ def graph(pt):
   InfDires = set()
   while len(PVert) > 0:
     pick = PVert[0]
+    if transversalitytest(pick, weights, cyc) == False:
+      print("Non-transverse intersection found")
+      exit()
     PVert = PVert[1:]
     # print(f"Found vertex {pick}")
     Vert = Vert + [pick]
