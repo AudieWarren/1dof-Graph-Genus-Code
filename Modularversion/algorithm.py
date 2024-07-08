@@ -181,6 +181,8 @@ def graph(pt):
     pick = PVert[0]
     if transversalitytest(pick, weights, cyc) == False:
       print("Non-transverse intersection found")
+      print(f"non-transverse intersection point is {pick}")
+      print(f"We found {len(Edg)} edges and {len(Vert)} vertices")
       exit()
     PVert = PVert[1:]
     # print(f"Found vertex {pick}")

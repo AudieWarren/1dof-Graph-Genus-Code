@@ -6,12 +6,12 @@ from graphgeneration import *
 
 # print(f"cycles are {cyc}")
 # if Tri < 4:
-    # xchoices, ychoices, n = listcreation(cyc,n)
-    # Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
+#     xchoices, ychoices, n = listcreation(cyc,n)
+#     Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
 # else: 
-Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(startingpoint(edges, graphvertices)))
+#     Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(startingpoint(edges, graphvertices)))
 
-# Vert, Edg, Ray, InfDires, InfDiresmultset = graph([[0,0,0,0],[0,0,0,0]])
+Vert, Edg, Ray, InfDires, InfDiresmultset = graph([[0,0,arb(),arb(),0,arb(),arb(),0,arb(),0,0,arb(),0,arb(),arb(),0,0,0,arb(),arb()],[0,arb(),0,0,arb(),0,0,arb(),0,arb(),arb(),0,arb(),0,0,arb(),arb(),arb(),0,0]])
 genus = len(Edg)-len(Vert)+1
 
 print(f"There are {len(Vert)} vertices")
