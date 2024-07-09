@@ -11,7 +11,11 @@ from graphgeneration import *
 # else: 
 #     Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(startingpoint(edges, graphvertices)))
 
-Vert, Edg, Ray, InfDires, InfDiresmultset = graph([[0,0,arb(),arb(),0,arb(),arb(),0,arb(),0,0,arb(),0,arb(),arb(),0,0,0,arb(),arb()],[0,arb(),0,0,arb(),0,0,arb(),0,arb(),arb(),0,arb(),0,0,arb(),arb(),arb(),0,0]])
+#Spider starting point
+Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([[0,0,arb(),arb(),0,arb(),arb(),0,arb(),0,0,arb(),0,arb(),arb(),0,0,0,arb(),arb()],[0,arb(),0,0,arb(),0,0,arb(),0,arb(),arb(),0,arb(),0,0,arb(),arb(),arb(),0,0]]))
+
+# Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([[0,arb(),arb(),1,arb(),0,0,1,arb(),0,0,arb(),1,arb(),arb(),arb(),0,arb(),1,0],[arb(),0,0,arb(),0,arb(),0,0,0,arb(),arb(),0,arb(),0,0,0,arb(),0,arb(),arb()]]))
+
 genus = len(Edg)-len(Vert)+1
 
 print(f"There are {len(Vert)} vertices")
