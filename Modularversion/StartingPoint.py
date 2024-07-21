@@ -2,8 +2,6 @@ from itertools import combinations
 from randomnumbergenerators import *
 from algorithm import dirs, go
 
-
-
 #Starting point generation starts here - commented out for new improved version
 #Find positions for minima in starting point
 def listcreation(cyc,n):

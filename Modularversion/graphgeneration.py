@@ -1,12 +1,10 @@
 import networkx as nx
 
 #Notice - edge indexing starts from zero!
-#Just uncomment the value of n and the cycle list and run the programme. 
+#Uncomment/write the cycles of your graph and run main. 
 #If no starting point is found, you can input a starting point manually at the bottom of the code. Uncomment the 'graph' function and comment out the 'list creation' function.
 
 #INPUT - the list of edges
-
-
 
 # K24-genus 17
 # 3prism without int triangle edge - genus 5
@@ -44,8 +42,6 @@ import networkx as nx
 #Open envelope graph
 # edges = [(0,1),(1,2),(2,3),(3,4),(4,0),(4,5),(3,5),(5,6),(6,1),(6,2)]
 
-# edges = [(0,1),(1,2),(2,3),(3,4),(4,0),(0,5),(4,5),(3,5),(5,6),(6,2)]
-
 #prism edges -genus 5
 # edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5)]
 
@@ -53,7 +49,7 @@ import networkx as nx
 # edges = [(0,1),(0,2),(0,4),(1,2),(1,5),(2,3),(3,4),(4,5), (3,5), (6,0),(6,7),(7,4)]
 
 #Wagner Graph - genus 225
-# edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,6),(6,7),(7,0),(0,4),(1,5),(2,6),(3,7)]
+edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,6),(6,7),(7,0),(0,4),(1,5),(2,6),(3,7)]
 
 #cube graph - genus 247
 # edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4)]
@@ -62,23 +58,11 @@ import networkx as nx
 # edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,6),(6,7),(7,0),(0,4),(1,7),(2,5),(3,6)]
 
 #Spider graph 3
-edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4),(8,4),(9,5),(10,6),(11,7),(8,9),(9,10),(10,11),(11,8)]
+# edges = [(0,1),(1,2),(2,3),(3,0),(0,4),(1,5),(2,6),(3,7),(4,5),(5,6),(6,7),(7,4),(8,4),(9,5),(10,6),(11,7),(8,9),(9,10),(10,11),(11,8)]
 
 #double house spider
 # edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,0),(0,2),(3,5)]
 # edges = [(0,1),(1,2),(2,3),(3,4),(4,5),(5,0),(0,2),(3,5),(0,6),(1,7),(2,8),(3,9),(4,10),(5,11),(6,7),(7,8),(8,9),(9,10),(10,11),(11,6)]
-
-#Georg/Paul/Niels example
-# edges = [(0,1),(1,6),(6,4),(4,3),(3,5),(5,0),(0,2),(1,2),(2,3),(2,4)]
-
-#Josef example on nine vertices
-# edges = [(0,1),(0,2),(0,3),(0,4),(5,1),(5,4),(6,1),(6,2),(7,2),(7,3),(8,3),(8,4),(5,8),(6,7)]
-
-#Example of Sitharam,Wang,Gao - genus 129
-# edges = [(0,2),(2,1),(1,3),(0,3),(4,5),(5,6),(6,7),(7,4),(2,4),(1,5),(3,6),(3,4)]
-
-# edges = [(0,2),(0,3),(0,4),(1,2),(1,3),(1,4),(0,5),(1,5)]
-# edges = [(0,3),(0,4),(0,5),(0,6),(1,3),(1,4),(1,6),(2,5),(2,6),(1,2)]
 
 #Omn graph
 # m,n = 3,3
