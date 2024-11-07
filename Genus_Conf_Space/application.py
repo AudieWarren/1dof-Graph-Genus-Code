@@ -1,23 +1,26 @@
+""" This file calls the main algorithm and prints the results. """
+
 import graphgeneration
-Tri = graphgeneration.Tri
 from StartingPoint import *
 from algorithm import *
 from graphgeneration import *
+Tri = graphgeneration.Tri
 
+"""Optional printing of list of cycles."""
 # print(f"cycles are {cyc}")
+
+"""Depending on the number of triangles in G, choose different alg."""
 if Tri < 4:
-    xchoices, ychoices, n = listcreation(cyc,n)
-    Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(pointcreation(xchoices, ychoices, n))) 
-else: 
-    Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex(startingpoint(edges, graphvertices)))
+    xchoices, ychoices, n = listcreation(cyc, n)
+    Vert, Edg, Ray, InfDires, InfDiresmultset = graph(
+        movetovertex(pointcreation(xchoices, ychoices, n)))
+else:
+    Vert, Edg, Ray, InfDires, InfDiresmultset = graph(
+        movetovertex(startingpoint(edges, graphvertices)))
 
-#Spider starting point
-# Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([[0,0,arb(),arb(),0,arb(),arb(),0,arb(),0,0,arb(),0,arb(),arb(),0,0,0,arb(),arb()],[0,arb(),0,0,arb(),0,0,arb(),0,arb(),arb(),0,arb(),0,0,arb(),arb(),arb(),0,0]]))
+genus = len(Edg) - len(Vert) + 1
 
-# Vert, Edg, Ray, InfDires, InfDiresmultset = graph(movetovertex([[0,arb(),arb(),1,arb(),0,0,1,arb(),0,0,arb(),1,arb(),arb(),arb(),0,arb(),1,0],[arb(),0,0,arb(),0,arb(),0,0,0,arb(),arb(),0,arb(),0,0,0,arb(),0,arb(),arb()]]))
-
-genus = len(Edg)-len(Vert)+1
-
+"""Optional printing of further information."""
 print(f"There are {len(Vert)} vertices")
 print(f"There are {len(Edg)} bounded edges")
 print(f"There are {len(Ray)} infinite rays")
@@ -26,17 +29,13 @@ print(f"The genus of (one component of) the curve is {genus}")
 # print(f"The infinite ray direction mult set are {InfDiresmultset}")
 # print(f"The vertices are {Vert}")
 # print(f"The bounded edges are {Edg}")
-
 # print(Edg)
 # print(Vert)
-# Area = 0
-# for pair in Edg:
-#     edgearea = math.dist(Vert[pair[0]-1][0],Vert[pair[1]-1][0])
-#     Area = Area + edgearea
-    
-# print(f"The area of the curve is {Area}")
 
-
+"""
+The comments below can print a list of the infinite ray directions
+and also their multiplicities.
+"""
 # mults = []
 # for dir in InfDires:
 #   count = 0
@@ -49,7 +48,7 @@ print(f"The genus of (one component of) the curve is {genus}")
 # sum = 0
 # for i in mults:
 #   sum = sum + i
-  
+
 # dirswithmult = []
 # for i in range(len(InfDires)):
 #   dirswithmult.append([list(InfDires)[i],mults[i] ])
